@@ -25,12 +25,12 @@ import com.o19s.es.ltr.ranker.parser.LtrRankerParserFactory;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.tests.util.LuceneTestCase;
 import org.opensearch.Version;
-import org.opensearch.common.ParsingException;
+import org.opensearch.core.common.ParsingException;
 import org.opensearch.common.Randomness;
-import org.opensearch.common.Strings;
-import org.opensearch.common.io.stream.ByteBufferStreamInput;
+import org.opensearch.core.common.Strings;
+import org.opensearch.core.common.io.stream.ByteBufferStreamInput;
 import org.opensearch.common.io.stream.BytesStreamOutput;
-import org.opensearch.common.io.stream.StreamInput;
+import org.opensearch.core.common.io.stream.StreamInput;
 import org.opensearch.common.xcontent.LoggingDeprecationHandler;
 import org.opensearch.core.xcontent.ToXContent;
 import org.opensearch.core.xcontent.XContentBuilder;
@@ -245,8 +245,8 @@ public class StoredLtrModelParserTests extends LuceneTestCase {
     }
 
     public StoredLtrModel reparseModel(StoredLtrModel srcModel) throws IOException {
-        XContentBuilder builder = XContentFactory.contentBuilder(XContentType.JSON);
-        String modelString = Strings.toString(srcModel.toXContent(builder, ToXContent.EMPTY_PARAMS));
+        XContentBuilder builder = XContentFactory.jsonBuilder();
+        String modelString = srcModel.toXContent(builder, ToXContent.EMPTY_PARAMS).toString();
         StoredLtrModel modelReparsed = parse(modelString);
         return modelReparsed;
     }
@@ -333,14 +333,14 @@ public class StoredLtrModelParserTests extends LuceneTestCase {
     public void testToXContent() throws IOException {
         StoredLtrModel model = parse(getTestModel());
 
-        XContentBuilder builder = XContentFactory.contentBuilder(XContentType.JSON);
-        String modelString = Strings.toString(model.toXContent(builder, ToXContent.EMPTY_PARAMS));
+        XContentBuilder builder = XContentFactory.jsonBuilder();
+        String modelString = model.toXContent(builder, ToXContent.EMPTY_PARAMS).toString();
         StoredLtrModel modelReparsed = parse(modelString);
         assertTestModel(modelReparsed);
 
         model = parse(getTestModelAsXContent());
-        builder = XContentFactory.contentBuilder(XContentType.JSON);
-        modelString = Strings.toString(model.toXContent(builder, ToXContent.EMPTY_PARAMS));
+        builder = XContentFactory.jsonBuilder();
+        modelString = model.toXContent(builder, ToXContent.EMPTY_PARAMS).toString();
         modelReparsed = parse(modelString);
         assertTestModelAsXContent(modelReparsed);
     }

@@ -26,7 +26,8 @@ import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.tests.util.LuceneTestCase;
 import org.apache.lucene.tests.util.TestUtil;
 import org.opensearch.client.Requests;
-import org.opensearch.common.bytes.BytesReference;
+import org.opensearch.common.xcontent.XContentType;
+import org.opensearch.core.common.bytes.BytesReference;
 import org.opensearch.common.xcontent.LoggingDeprecationHandler;
 import org.opensearch.core.xcontent.NamedXContentRegistry;
 import org.opensearch.core.xcontent.XContentBuilder;
@@ -123,7 +124,7 @@ public class IndexFeatureStoreTests extends LuceneTestCase {
     }
 
     private void assertNameAndTypes(StorableElement elt, BytesReference ref) throws IOException {
-        XContentParser parser = XContentFactory.xContent(Requests.INDEX_CONTENT_TYPE).createParser(NamedXContentRegistry.EMPTY,
+        XContentParser parser = XContentType.JSON.xContent().createParser(NamedXContentRegistry.EMPTY,
                 LoggingDeprecationHandler.INSTANCE, ref.streamInput());
         Map<String,Object> map = parser.map();
         assertEquals(elt.name(), map.get("name"));
