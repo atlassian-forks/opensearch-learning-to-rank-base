@@ -200,10 +200,7 @@ public class RankerQuery extends Query {
         }
 
         List<Weight> weights = new ArrayList<>(queries.size());
-        // XXX: this is not thread safe and may run into extremely weird issues
-        // if the searcher uses the parallel collector
-        // Hopefully elastic never runs
-        MutableSupplier<LtrRanker.FeatureVector> vectorSupplier = new Suppliers.FeatureVectorSupplier();
+        MutableSupplier<LtrRanker.FeatureVector> vectorSupplier = new Suppliers.MutableSupplier<>();
         FVLtrRankerWrapper ltrRankerWrapper = new FVLtrRankerWrapper(ranker, vectorSupplier);
         LtrRewriteContext context = new LtrRewriteContext(ranker, vectorSupplier);
         for (Query q : queries) {
